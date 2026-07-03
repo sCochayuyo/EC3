@@ -46,7 +46,7 @@ while len(libros) < 50:
 
         except Exception:
             pass
-    driver.find_element(By.XPATH, "/html/body/div/div/div/div/section/div[2]/div/ul/li[2]/a").click()
+    driver.find_element(By.CLASS_NAME, "next").click()
     time.sleep(2)
-    
+
 driver.quit()
