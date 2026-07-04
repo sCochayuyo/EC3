@@ -30,11 +30,20 @@ while len(libros) < 50:
 
         try:
             titulo = elemento.find_element(By.XPATH, ".//h3/a").text
-            precio = elemento.find_element(By.CLASS_NAME, "price_color").text
+            precio = float(elemento.find_element(By.CLASS_NAME, "price_color").replace("£", ""))
             valoracion = elemento.find_element(By.CSS_SELECTOR, ".star-rating").get_attribute("class").replace("star-rating ", "")
             disponibilidad = elemento.find_element(By.CSS_SELECTOR, ".instock.availability").text
             categoria = driver.find_element(By.XPATH, "/html/body/div/div/div/div/div[1]/h1").text
-
+            if valoracion == "one":
+                precio = 1
+            elif valoracion == "two":
+                precio = 2
+            elif valoracion == "three":
+                precio = 3
+            elif valoracion == "four":
+                precio = 4
+            elif valoracion == "five":
+                precio = 5
             libros.append({
                 "titulo": titulo,
                 "precio": precio,
