@@ -10,7 +10,7 @@ class Categoria(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     nombre: str = Field(unique=True)
 
-    Libros: List["Libro"] = Relationship(back_populates="Categoria")
+    libros: List["Libro"] = Relationship(back_populates="categoria")
 
 
 class Libro(SQLModel, table=True):
