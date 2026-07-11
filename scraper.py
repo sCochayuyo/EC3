@@ -58,7 +58,7 @@ while len(libros) < 50:
         try:
 
             i += 1
-            titulo = elemento.find_element(By.XPATH, ".//h3/a").text
+            titulo = elemento.find_element(By.XPATH, ".//h3/a").get_attribute("title")
 
             url_libro = elemento.find_element(By.XPATH, ".//h3/a").get_attribute("href")
 
@@ -84,7 +84,7 @@ while len(libros) < 50:
                 valoracion = 5
 
             nuevo_libro = LibroExtraido(
-                titulo=titulo,
+                titulo=str(titulo),
                 url=str(url_libro),
                 precio=precio,
                 valoracion=valoracion,
@@ -109,8 +109,15 @@ while len(libros) < 50:
         driver.find_element(By.CSS_SELECTOR, ".next a").click()
         time.sleep(2)
     except Exception:
-        print("Última página alcanzada.")
-        break
+        print("\nFin de página. Pasando a siguiente categoria Mystery")
+
+        try:
+            xpath_mystery = "/html/body/div/div/div/aside/div[2]/ul/li/ul/li[2]/a"
+            wait.until(EC.element_to_be_clickable((By.XPATH, xpath_mystery))).click()
+            time.sleep(2)
+        except Exception:
+            print("No se encontraron más categorías en el menú lateral.")
+            break
 
 # Obtencion de campos adicionales
 print("\n---------- OBTENCION DE CAMPOS ADICIONALES -----------")
