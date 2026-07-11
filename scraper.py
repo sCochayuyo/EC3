@@ -42,33 +42,56 @@ driver = webdriver.Chrome(service=service)
 wait = WebDriverWait(driver, timeout=15)
 driver.get("https://books.toscrape.com/")
 
-wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div/div/div/aside/div[2]/ul/li/ul/li[18]/a"))).click()
+xpath_fantasy = "/html/body/div/div/div/aside/div[2]/ul/li/ul/li[18]/a"
+wait.until(EC.element_to_be_clickable((By.XPATH, xpath_fantasy))).click()
 
 libros: list[LibroExtraido] = []
 i = 0
 
-while len(libros) < 50:
+while len(libros) <= 50:
     elementos = wait.until(
-        EC.presence_of_all_elements_located((By.CSS_SELECTOR, ".col-xs-6.col-sm-4.col-md-3.col-lg-3")))
+        EC.presence_of_all_elements_located(
+            (By.CSS_SELECTOR, ".col-xs-6.col-sm-4.col-md-3.col-lg-3")
+        ))
 
     for elemento in elementos:
-        if len(libros) >= 50:
+        if len(libros) > 50:
             break
 
         try:
 
             i += 1
-            titulo = elemento.find_element(By.XPATH, ".//h3/a").get_attribute("title")
+            titulo = elemento.find_element(
+                By.XPATH, ".//h3/a"
+            ).get_attribute("title")
 
-            url_libro = elemento.find_element(By.XPATH, ".//h3/a").get_attribute("href")
+            url_libro = elemento.find_element(
+                By.XPATH, ".//h3/a"
+            ).get_attribute("href")
 
-            # Limpieza del precio requerida para guardarlo como float
-            precio_texto = elemento.find_element(By.CLASS_NAME, "price_color").text.replace("£", "")
+            precio_texto = elemento.find_element(
+                By.CLASS_NAME, "price_color"
+            ).text.replace("£", "")
+
             precio = float(precio_texto)
 
-            valoracion_texto = elemento.find_element(By.CSS_SELECTOR, ".star-rating").get_attribute("class").replace("star-rating ", "")  # type: ignore[union-attr]
-            disponibilidad = elemento.find_element(By.CSS_SELECTOR, ".instock.availability").text
-            categoria = driver.find_element(By.XPATH, "/html/body/div/div/div/div/div[1]/h1").text
+            valoracion_texto = (
+                elemento.find_element(
+                    By.CSS_SELECTOR,
+                    ".star-rating",
+                )
+                .get_attribute("class")
+                .replace("star-rating ", "")  # type: ignore[union-attr]
+
+            )
+
+            disponibilidad = elemento.find_element(
+                By.CSS_SELECTOR, ".instock.availability"
+            ).text
+
+            categoria = driver.find_element(
+                By.XPATH, "/html/body/div/div/div/div/div[1]/h1"
+            ).text
 
             # Asignación correcta de la variable 'valoracion'
             valoracion = 0
@@ -109,11 +132,16 @@ while len(libros) < 50:
         driver.find_element(By.CSS_SELECTOR, ".next a").click()
         time.sleep(2)
     except Exception:
-        print("\nFin de página. Pasando a siguiente categoria Mystery")
+        print("\nFin de página. Pasando a siguiente categoria")
 
         try:
-            xpath_mystery = "/html/body/div/div/div/aside/div[2]/ul/li/ul/li[2]/a"
-            wait.until(EC.element_to_be_clickable((By.XPATH, xpath_mystery))).click()
+            xpath_mystery = (
+                "/html/body/div/div/div/aside/div[2]/ul/"
+                "li/ul/li[2]/a"
+            )
+            wait.until(
+                EC.element_to_be_clickable((By.XPATH, xpath_mystery))
+            ).click()
             time.sleep(2)
         except Exception:
             print("No se encontraron más categorías en el menú lateral.")
