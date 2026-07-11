@@ -1,6 +1,6 @@
 from typing import Dict, List
 from sqlmodel import select
-from Models import Categoria, Libro
+from models import Categoria, Libro
 from database import get_session
 from scraper import LibroExtraido
 
