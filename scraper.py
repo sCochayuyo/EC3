@@ -92,7 +92,14 @@ while len(libros) < 50:
                 categoria=categoria
             )
             libros.append(nuevo_libro)
-            print(f" {i} | Titulo: {titulo} | Precio: £{precio}  | Estrellas: {valoracion} | Disponibilidad: {disponibilidad} | Categoria: {categoria}")
+            print(
+                f"{i} | "
+                f"Título: {titulo} | "
+                f"Precio: £{precio} | "
+                f"Estrellas: {valoracion} | "
+                f"Disponibilidad: {disponibilidad} | "
+                f"Categoría: {categoria}"
+            )
 
         except Exception:
             pass
@@ -106,10 +113,10 @@ while len(libros) < 50:
         break
 
 # Obtencion de campos adicionales
+print("\n---------- OBTENCION DE CAMPOS ADICIONALES -----------")
 for index, libro in enumerate(libros):
     try:
         driver.get(libro.url)
-
         try:
             libro.upc = driver.find_element(
                 By.XPATH, "//th[text()='UPC']/following-sibling::td"
@@ -124,6 +131,15 @@ for index, libro in enumerate(libros):
             ).text
         except Exception:
             libro.descripcion = "Sin descripción"
+
+        desc_corta = libro.descripcion[:10] + "..."
+
+        print(
+            f"{index + 1} | "
+            f"Nombre: {libro.titulo} | "
+            f"UPC: {libro.upc} | "
+            f"Descripción: {desc_corta}"
+        )
 
     except Exception as e:
         print(f"Error accediendo a los detalles de '{libro.titulo}': {e}")
