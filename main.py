@@ -15,7 +15,6 @@ def main() -> None:
 
     print("3.- Guardando datos")
     poblar_base(scraper.libros)
-    print("\nEjecucion Finalizada")
 
     print("4.- Ejecucion de Consultas")
     with get_session() as session:
@@ -27,6 +26,8 @@ def main() -> None:
         agrupacion_cat = queries.items_por_categoria(session)
         for categoria, cantidad in agrupacion_cat:
             print(f"- {categoria}: {cantidad} libros")
+
+    print("\nEjecucion Finalizada")
 
 
 if __name__ == "__main__":
