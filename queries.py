@@ -1,7 +1,5 @@
-from sqlmodel import Session, select, func, col, case, text
+from sqlmodel import Session, select, func, col
 from models import Categoria, Libro
-
-from EC3.Models import Libro, Categoria
 
 
 def total_items(session: Session) -> int:
@@ -31,18 +29,31 @@ def items_por_categoria(session: Session) -> list[tuple[str, int]]:
 
     return [(nombre, cantidad) for nombre, cantidad in resultado]
 
+
 def top_10_por_criterio(session: Session) -> list:
-    consulta =(
-        select(Libro.titulo)
+    """
+    Retorna los 10 libros con la mayor valoración.
+    """
+    consulta = (
+        select(Libro.titulo, Libro.valoracion)
         .order_by(col(Libro.valoracion).desc()).limit(10)
     )
     resultado = session.exec(consulta).all()
 
     return list(resultado)
 
+
 def estadisticas(session: Session) -> dict:
+    """
+    Retorna estadísticas por categoría.
+    """
     consulta = (
-        select(Categoria.nombre, func.avg(Libro.precio), func.max(Libro.precio), func.min(Libro.precio))
+        select(
+            Categoria.nombre,
+            func.avg(Libro.precio),
+            func.max(Libro.precio),
+            func.min(Libro.precio)
+        )
         .join(Categoria)
         .group_by(Categoria.nombre)
     )
